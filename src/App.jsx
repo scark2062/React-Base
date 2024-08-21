@@ -5,11 +5,18 @@ import './App.css'
 import Navbar from './components/Navbar'
 import Alert from './components/Alert'
 import Serviceitems from './components/Serviceitems'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
+import Home from './components/Home'
+import About from './components/About'
+import BlogState from './context/blogs/BlogState'
 
 function App() {
-   const apiKey = import.meta.env.VITE_API_KEY;
-console.log('API Key:',apiKey)
-
+  const apiKey = import.meta.env.VITE_API_KEY;
+  console.log('API Key:', apiKey);
 
   const [mode, setMode] = useState('light')
   const [text, setButtonText] = useState('Enable Dark')
@@ -20,9 +27,9 @@ console.log('API Key:',apiKey)
       type: type,
       message: message
     })
-    // setTimeout(() => {
-    //   setAlert(null)
-    // }, 2000);
+    setTimeout(() => {
+      setAlert(null)
+    }, 2000);
 
   }
 
@@ -40,11 +47,17 @@ console.log('API Key:',apiKey)
   }
   return (
     <>
-      
-      <Navbar mode={mode} text={text} toggleMode={toggleMode} />
-      <Alert alert={alert} showAlert={showAlert} />
-      <Serviceitems />
-    
+    <BlogState apiKey={apiKey}>
+      <Router>
+        <Navbar mode={mode} text={text} toggleMode={toggleMode} />
+        <Alert alert={alert} showAlert={showAlert} />
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/blogs' element={<Serviceitems apiKey={apiKey} />} />
+          <Route path='/about' element={<About />} />
+        </Routes>
+      </Router>
+    </BlogState>
     </>
   )
 }
